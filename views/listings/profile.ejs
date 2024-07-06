@@ -1,0 +1,68 @@
+<% layout('layout/boilerplate') -%>
+<body>
+    <div class="container-fluid violet mt-0">
+        <div class="profile-details container">
+           <div class="row pb-3">
+
+            <div class="col-md-4 d-flex justify-content-md-end justify-content-center py-3">
+                <div class="position-relative" style="border-radius: 50%;" >
+                  <%if(!data.profilePic.url){ %>
+                    <img src="/DealDex.png" alt="Profile image" >
+                    <% } else {%>
+                      <img src="<%= data.profilePic.url %>" alt="Profile image" >
+                    <% } %>
+                   <%if(currUser.username===data.username){ %>
+                    <form action="/<%=data.username %>?_method=PUT" enctype="multipart/form-data" method="post" id="profile-form">
+                      <button class="btn" id="profile-btn" >
+                        <i class="fa-solid fa-camera"></i>
+                        <input type="file" name="profilePic" id="profImage">
+                      </button>
+                    </form>
+                    <% } %>
+                </div>
+              </div>
+              
+              <div class="col-md-8 d-flex flex-column justify-content-center ps-md-5 mt-3 text-md-start align-items-center align-items-md-start">
+                   <h1 style="font-style: italic;" class="mb-3"><%= data.username %></h1>
+                   <form action="/<%= data.username %>" class="profileEdit" method="post">
+                     <p style="margin-bottom:10px"><a href=""><i class="fa-brands fa-rocketchat me-2"></i>chat</a></p>
+                     <div >
+                      <label for="email"><i class="fa-solid fa-envelope me-2 "></i></label>
+                      <input type="text" value="<%= data.email %>" name="email" readonly class="removeReadOnly">
+                    </div>
+                    <div class="mt-2">
+                      <label for="phone"><i class="fa-solid fa-phone me-2"></i></label>
+                      <input type="text" value="<%= data.phone %>" name="phone" readonly class="removeReadOnly">
+                    </div>
+                    <% if(currUser.username===data.username){ %>
+                    <button class="btn btn-outline-dark btn-sm mt-3" id="removeReadOnlyBtn" type="button"><i class="fa-solid fa-pen me-1"></i> Edit Profile</button>
+                    <button class="btn btn-outline-dark btn-sm mt-3 saveBtn"><i class="fa-solid fa-floppy-disk me-2"></i>Save Profile</button>
+                    <% } %>
+                   </form>
+              </div>
+           </div>
+         </div>
+    </div>
+    <div class="container mt-2">
+         <% if(listings.length){ %>
+          <div class="row border">
+            <h2 class="text-center mt-3" style="font-weight: 500;">Sellings</h2>
+              <% for(let obj of listings){ %>
+                  <%- include('../includes/card.ejs',{obj}) %>
+                       <% } %>
+           </div>
+          <% } %>
+
+         <% if(data.username===currUser.username){ %>
+          <% if(data.favourites.length){ %>
+          <div class="row border mt-2">
+            <h2 class="text-center mt-3">My Favourites</h2>
+            <% for(let obj of data.favourites){ %>
+                <%- include('../includes/card.ejs',{obj}) %>
+                      <% } %>
+                     </div>
+                    <% } %>
+         <% } %>
+    </div>
+    <script src="/profile.js"></script>
+</body>

@@ -1,0 +1,33 @@
+<% layout("layout/boilerplate") -%>
+<body>
+    <div class="container">
+        <div class="row">
+            <form action="/signup" method="post" class="col-lg-8 col-md-10 offset-md-1  offset-lg-2 needs-validation" novalidate>
+            <h1 class="mb-5 text-sm-start text-center">SignUp on <span style="color:red;">Deal</span>Dex</h1>
+            <div class="form-group mb-2">
+                <label for="user" class="form-label">Username:</label>
+                <input type="text" class="form-control" name="username" id="user" placeholder="Enter Username" required>
+                <div class="invalid-feedback">Enter Your Username!</div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="youremail@gmail.com"  required>
+                <div class="invalid-feedback">Enter Your email!</div>
+            </div>
+            <div class="form-group mb-2">
+                <label for="phone" class="form-label">Phone:</label>
+                <input type="text" class="form-control" name="phone" id="phone" placeholder="9865XXXXXX"  required>
+                <div class="invalid-feedback">Enter Your Phone Number!</div>
+            </div>
+            <div class="form-group">
+                <label for="pass" class="form-label">Password:</label>
+                <input type="passoword" class="form-control" name="password" id="pass" placeholder=" Enter Password"  required>
+                <div class="invalid-feedback">Enter Your Password!</div>
+            </div>
+            <button class="btn btn-dark mt-3">Submit</button>
+        </form>
+       </div>
+    </div>
+    <script src="/validation.js"></script>
+</body>
+</html>

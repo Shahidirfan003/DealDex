@@ -1,0 +1,26 @@
+<%layout("layout/boilerplate") -%>
+<body>
+  <%- include("../includes/navbar2.ejs") %>
+  
+  <div class="container">
+      <h3 class="my-3 text-center" style="font-weight: 400;">Fresh recommendations</h3>
+      <div class="row">
+        <% for(let obj of data){ %>
+           <%- include('../includes/card.ejs',{obj}) %>
+              <% } %>
+       </div>
+    </div>
+
+    <script>
+    //to make a tag active when clicked
+      let path=window.location.href;
+      let idx=path.indexOf('/listings');
+      path=path.slice(idx);
+      let activeTag=document.querySelector(`#nav2 a[href="${path}"]`);
+      if(activeTag){
+        activeTag.classList.add('active');
+      }  
+    </script>
+</body>
+
+

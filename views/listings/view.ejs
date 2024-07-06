@@ -1,0 +1,238 @@
+<% layout("layout/boilerplate.ejs") -%>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8 col-md-7 ">
+        <div class="image w-100 minh-75">
+          <img src=<%= listing.image.url %> alt="image" style="border-radius:.5rem" width="100%" height="100%"/>
+        </div>
+        <div class="p-3 view-decription">
+          <h3>Description</h3>
+          <pre  style="white-space:pre-wrap;" ><%= listing.description %></pre>
+        </div>
+  
+        <!-- customer-review-count  -->
+        <div id="serverData" data-data="<%= JSON.stringify(reviewRatings) %>">
+          <h3 class="mt-3">Customer reviews</h3>
+         <div class="d-flex align-items: baseline">
+          <p class="starability-result card-text" data-rating= <%= listing.rating %>></p>
+          <p style="font-size: 1.4rem;margin-left: 10px;"><b><%= listing.rating %> out of 5</b></p>
+         </div>
+         <p><%= listing.reviews.length %> customer ratings</p>
+
+          <% for(let obj of reviewRatings) { %>
+            <div class="d-flex align-items-baseline" style="color:#FF9900;font-weight: 600;" id="ratings-size">
+              <p><%= obj.name %></p>
+              <div style="height:10px;border:.5px solid black;border-radius: .4rem;" class="w-75 mx-2">
+                <div class="review-width" style="height:100%;background-color:#ff9900a2;border-radius: .4rem;"></div>
+              </div>
+              <p><%= obj.percentage %>%</p>
+             </div>
+          <% } %>
+
+        </div>
+
+       
+</div>
+
+      <div class="col-lg-4 col-md-5 p-md-0 ">
+          <div class="upper view-decription p-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h2>&#x20b9; <%= listing.price %></h2>
+                <div class="font-larger">
+                 <i class="fa-solid fa-share-nodes p-3"></i>
+                 <i class="fa-regular fa-heart"></i>
+                </div>
+           </div>
+           <div>
+             <h5><%= listing.title %></h5>
+           </div>
+           <div class="listing-rating d-flex">
+             <span class="w-50">Rating: <p class="starability-result card-text" data-rating= <%= listing.rating %> ></p></span>   
+              <span class="w-50 text-end"><%= listing.reviews.length %> customer ratings </span>
+           </div>
+           <div class="d-flex justify-content-between align-items-center pt-3">
+               <small><%= listing.location %></small>
+               <small><%= listing.date.toString().slice(4,15) %></small>
+           </div>
+          </div>
+
+          <div class="view-decription p-3 text-center s-bg">
+            <a id="owner" href="/<%= listing.owner.username %>"><%= listing.owner.username%></a>
+             <a href="" class=" btn btn-outline-dark w-100 disabled">Chat With Seller</a>
+             <div class="pt-2">
+                <i class="fa-solid fa-phone"></i> <span ><%= listing.phone %></span>
+             </div>
+          </div>
+
+          <div class="view-decription p-3">
+            <h5>Posted in</h5>
+            <div class="d-flex justify-content-between align-items-center">
+                <small><%= listing.location %></small>
+                <small><%= listing.date.toString().slice(4,15) %></small>
+            </div>
+          </div>
+         <% if(currUser){ %>
+          <% if(listing.favourites.some(el=>el==currUser.id)) {%>
+            <form action="/listings/<%= listing._id %>/fav?_method=PUT" method="post">
+              <button class="btn btn-secondary w-100 mt-2">
+                Remove from Favourites
+              </button>
+            </form>
+            <% } else{%>
+              <form action="/listings/<%= listing._id %>/fav?_method=PUT" method="post">
+                <button class="btn btn-secondary w-100 mt-2">
+                  Add to Favourites
+                </button>
+              </form>
+              <% } %>
+          <% } %>
+
+
+          <% if(currUser && currUser._id.equals(listing.owner._id)){ %>
+            <div class="view-description mt-2 p-0">
+              <a href="/listings/<%= listing._id %>/edit" class="btn btn-outline-dark w-100 mb-2">Edit</a>
+              <form action="/listings/<%= listing._id %>?_method=DELETE" method="post">
+              <button class="btn btn-danger w-100">
+                Delete
+              </button>
+              </form>
+            </div>
+            <% } %>
+
+      </div>
+    </div>
+     
+    <div class="col-lg-8 mt-2" >
+      <h2>Location</h2>
+      <div id="map" style="width:100%;height:250px;border-radius: .5rem;"></div>
+    </div>
+
+
+     <div class="col-lg-8">
+      <h2 class="mt-3">Leave a Review</h2>
+     
+      <% if(currUser){ %>
+        <form action="/listings/<%= listing._id %>/review" method="post" class="needs-validation" novalidate>
+          <div class=" mt-3">
+            <label for="rating" class="form-label">Rating</label>
+          <fieldset class="starability-slot">
+            <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="1" checked aria-label="No rating." />
+            <input type="radio" id="first-rate1" name="rating" value="1" />
+            <label for="first-rate1" title="Terrible">1 star</label>
+            <input type="radio" id="first-rate2" name="rating" value="2" />
+            <label for="first-rate2" title="Not good">2 stars</label>
+            <input type="radio" id="first-rate3" name="rating" value="3" />
+            <label for="first-rate3" title="Average">3 stars</label>
+            <input type="radio" id="first-rate4" name="rating" value="4" />
+            <label for="first-rate4" title="Very good">4 stars</label>
+            <input type="radio" id="first-rate5" name="rating" value="5" />
+            <label for="first-rate5" title="Amazing">5 stars</label>
+          </fieldset>
+        </div>
+           <div class="form-group">
+            <label for="comment" class="form-label">Comment:</label>
+            <textarea name="comment" id="comment" cols="30" rows="5" class="form-control" placeholder="Add your opinion..." required></textarea>
+            <div class="invalid-feedback">Enter Comment!</div>
+           </div>
+           <button class="btn btn-outline-dark mt-2">Submit</button>
+        </form>
+      <% } else{%>
+        <h6 style="color:red">You Must be Logged in to add A Review!</h6>
+        <% } %>
+   <!-- all reviews -->
+
+   <section class="reviews order-md-3">
+    <h3 class="mt-3 text-center">All reviews</h3>
+    <% for(let review of listing.reviews){ %>
+      <div class="review">
+       <div class="d-flex justify-content-between">
+        <div class="profile-pic d-flex">
+          <div class="me-2 d-flex"> 
+            <% if(review.owner.profilePic.url){ %>
+              <img src="<%= review.owner.profilePic.url %>" alt="profile img"  width="25px" height="25px">
+              <% }else { %>
+              <img src="/DealDex.png" alt="profile img" width="25px" height="25px">
+            <% } %>
+           <div class="ms-1" >
+             <p class="username m-0"><a href="/<%= review.owner.username %>" class="nav-link">@<%= review.owner.username %></a></p>
+             <p class="date"><%= review.date.toString().slice(0,25) %></p>
+           </div>
+          </div>
+       </div>
+       <div>
+        <p class="starability-result card-text" data-rating=<%= review.rating %> ></p>
+      </div>
+      </div>
+        <div class="review-content d-flex justify-content-between">
+            <pre style="white-space: pre-wrap;margin-bottom:0;" class="comment"><%= review.comment %>
+            </pre>
+            <% if(currUser && currUser._id.equals(review.owner._id)){ %>
+              <form action="/listings/<%= listing._id %>/review/<%= review._id %>?_method=DELETE" method="post" class="float-end">
+                <button class="btn btn-outline-white"><i class="fa-solid fa-trash-can"></i></button>
+              </form>
+              <% } %>
+        </div>   
+    </div>
+      <% } %>
+ </section>
+    
+     <article class="mt-3">
+      <h3 class="text-secondary">Related Products</h3>
+      <div class="p-2 " id="relatedProd">
+        <% for(let obj of data){ %>
+          <div  >
+                  
+                  <a href="/listings/<%= obj._id %>" class="text-decoration-none text-dark">
+                    <div class="card p-3 " >
+                      <img src=<%= obj.image.url%> class="card-img-top" alt="..." height="130px" >
+                     <% if(currUser) {%>
+                      <% if(obj.favourites.some(el=>el==currUser.id)) {%>
+                        <form action="/listings/<%= obj._id %>/fav?_method=PUT" method="post">
+                          <button id="favourites"> <i class="fa-solid fa-heart"></i></button>
+                        </form>
+                        <% } else{ %>
+                        <form action="/listings/<%= obj._id %>/fav?_method=PUT" method="post">
+                          <button id="favourites"> <i class="fa-regular fa-heart"></i></button>
+                        </form>
+                        <% } %>
+                    <% } %>
+                      <div class="card-body" >
+                        <h5 class="card-title hide-overflow"><%= obj.title %></h5>
+                        <div class="card-info d-flex justify-content-between  align-items-center">
+                          <div class="d-flex justify-content-start w-50 align-items-center ">
+                              <% if(obj.owner.profilePic.url){ %>
+                                <img src="<%= obj.owner.profilePic.url %>" alt="profile img" width="15px" height="15px">
+                              <% }else { %>
+                                  <img src="/DealDex.png" alt="profile img" width="25px" height="25px">
+                              <% } %>
+                              <a href="/<%=obj.owner.username%>"><%= obj.owner.username %></a>
+                          </div>
+                           <div class="custom-date w-50 d-flex justify-content-end align-items-center">
+                              <i class="fa-solid fa-calendar-days"></i>
+                               <%= obj.date.toString().slice(4,15) %>
+                           </div>
+                        </div>
+                      </div>
+                    </div>
+                  </a>                 
+                </div>
+                <% } %>
+      </div>
+     </article>
+
+     </div>
+  </div>
+
+
+  <script src="/validation.js"></script>
+  <script src="/script.js"></script>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+     const address= `<%- JSON.stringify(listing.location) %>`;
+  </script>
+  <script src="/map.js"></script>
+
+
+</body>

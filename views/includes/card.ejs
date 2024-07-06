@@ -1,0 +1,37 @@
+<div class="col-lg-4 col-xl-3 col-md-6">
+                
+    <a href="/listings/<%= obj._id %>" class="text-decoration-none text-dark">
+      <div class="card p-3 " >
+        <img src=<%= obj.image.url%> class="card-img-top" alt="..."  >
+       <% if(currUser) {%>
+        <% if(obj.favourites.some(el=>el==currUser.id)) {%>
+          <form action="/listings/<%= obj._id %>/fav?_method=PUT" method="post">
+            <button id="favourites"> <i class="fa-solid fa-heart"></i></button>
+          </form>
+          <% } else{ %>
+          <form action="/listings/<%= obj._id %>/fav?_method=PUT" method="post">
+            <button id="favourites"> <i class="fa-regular fa-heart"></i></button>
+          </form>
+          <% } %>
+      <% } %>
+        <div class="card-body">
+          <h5 class="card-title hide-overflow"><%= obj.title %></h5>
+          <div class="card-info d-flex justify-content-between  align-items-center">
+            <div class="d-flex justify-content-start w-50 align-items-center ">
+                <% if(obj.owner.profilePic.url){ %>
+                  <img src="<%= obj.owner.profilePic.url %>" alt="profile img" width="25px" height="25px">
+                <% }else { %>
+                    <img src="/DealDex.png" alt="profile img" width="25px" height="25px">
+                <% } %>
+                <a href="/<%=obj.owner.username%>"><%= obj.owner.username %></a>
+            </div>
+             <div class="custom-date w-50 d-flex justify-content-end align-items-center">
+                <i class="fa-solid fa-calendar-days"></i>
+                 <%= obj.date.toString().slice(4,15) %>
+             </div>
+          </div>
+        </div>
+      </div>
+    </a>
+    
+  </div>
